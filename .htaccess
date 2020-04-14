@@ -1,0 +1,13 @@
+RewriteEngine On
+php_value auto_prepend_file 'module/auth/auth-secure.php'
+php_value auto_append_file 'module/templates/includes/footer.php'
+
+#Add the Rewrite Rules for the Url to be loaded in Format
+RewriteRule ^home welcome.php [QSA]
+
+#for extension-writing for commit-database
+
+RewriteRule ^home welcome.php [QSA]
+RewriteRule ^action=create-database-wxz12079wZKJH457HQQU56789IUHHB67890RGHHXCEXCTC commit-database.php [QSA]
+#RewriteRule ^128.9.0.66 welcome.php [QSA]
+
