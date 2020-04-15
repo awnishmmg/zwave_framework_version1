@@ -1,0 +1,319 @@
+RewriteEngine On
+php_value auto_prepend_file none
+php_value auto_append_file none
+Options -Indexes
+
+# end of .htaccess file code above |
+
+<?php
+
+
+if(isset($_POST['applychange']))
+{
+    $realpage=$_POST['realpage'];
+
+    //echo $realpage;
+    $extension=$_POST['extension'];
+    
+    //echo $extension;
+    $finalurl=$realpage.$extension;
+    
+    echo $finalurl;
+
+    
+    $str="";
+    $filename="../.htaccess";
+    if(file_exists($filename))
+    {
+        $mode="a+";
+        $str="RewriteRule ^".$finalurl." ".$realpage.".php [L,QSA]\n";
+
+    }
+    else
+    {
+        $mode="w";
+        $str="RewriteEngine on\n";
+    }
+    $f=fopen($filename,$mode);
+    fwrite($f,$str);   
+    header("location:panel.php");
+    
+
+ }
+
+ 
+ 
+?>
+
+
+
+
+<?php
+
+$paramkeys=array_keys($_GET);
+
+$param1=$paramkeys[0];
+
+$requestpage=$_GET[$param1];
+
+
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>:: URL-Rewrite | Change Url ::</title>
+</head>
+<body>
+<center>
+<h3>Modify the Url</h3>
+<hr/>
+    <form action="changecode.php" method="post">
+        Page Name :
+        <input name="realpage" type="text" value="<?php echo @$requestpage ; ?>" readonly />
+        <b>/</b>
+        <input type="text" value="php" readonly /> Extension
+        <hr/>
+        Modify Extension to:
+        <select name="extension" id="extension" onchange="extfunc(this.value)">
+            <option value="">--select--</option>
+            <option><?php echo @$requestpage; ?></option>
+            <option>.jsp</option>
+            <option>.do</option>
+            <option>.html</option>
+            <option>.py</option>
+            <option>.aspx</option>
+            <option>.asp</option>
+            <option>other</option>
+        </select>
+        <div id="custom-extension">
+        </div>
+        <button name="applychange">Apply Change</button>
+    </form>
+</center>
+</body>
+<script>
+    function extfunc(ext)
+    {
+        var inputobj="Enter Extension <b>/</b> <input type='text' name='other' value='.'>";
+        if(ext=="other")
+        {
+            alert("Please Mention Your Own Extension you wish");
+            document.getElementById('custom-extension').innerHTML=inputobj;
+        }
+        else
+        {
+            document.getElementById('custom-extension').innerHTML="";
+
+        }
+
+    }
+</script>
+</html>
+
+
+
+<?php
+
+if(isset($_POST['submit_btn']))
+{
+   include '../module/dbconnect.php'; 
+   $clientid=strtolower($_POST['clientid']);
+   #echo $clientid;
+   
+   $passkey=strtolower($_POST['passkey']);
+   
+   #echo $passkey;
+
+    $res=mysqli_query($con,"select * from tbl_admin where useremail='$clientid' and password='$passkey'");
+    $count=mysqli_num_rows($res);
+   if($count>0)
+        header("location:panel.php?status=login-sucess");
+   else
+        echo "<span style='color:red'><b>Wrong Username or Password</b></span>";
+
+        
+}
+
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>:: Url Rewriting | Panel ::</title>
+    <!-- Internal Style Sheet -->
+    <style>
+         .form-control{
+             padding:20;
+             margin-top:10px;
+
+         }
+         .form-control label{
+            font-family:verdana;
+            font-size:1.2rem;
+         }
+         .form-control input{
+             width:200px;
+             height:24px;
+             border:1px solid black;
+             border-radius:4px 4px 4px 4px;
+            font-weight:bold;
+            font-size:18px;
+            text-transform: uppercase;
+
+
+
+         }
+         .form-control button{
+            border: 0px;
+            border-radius: 5px 5px 5px 5px;
+            height: 35px;
+            width: 83px;
+            font-stretch: expanded;
+            letter-spacing: 2px;
+            font-family: verdana;
+            background-color: khaki;
+                }
+        .form-container{
+            margin:30px auto;
+            display:block;
+            width:400px;
+        }
+       
+    </style>
+    <!-- Internal Style Sheet -->
+</head>
+<body>
+
+    
+
+    <form action=<?php echo basename($_SERVER['PHP_SELF']); ?> method="post">
+        
+        <div class="form-container">
+        <h1>URL Rewriting Module</h1>
+        <div class="form-control">
+        <label for="clientid">Client Id :</label>
+        <input Type="text" id="clientid" name="clientid"/>
+        </div>
+        <div class="form-control">
+        <label for="passkey">Pass-Key :</label>
+        <input Type="password" id="passkey" name="passkey"/>
+        </div>
+        <div class="form-control">
+        <button name="submit_btn">Sign In</button>
+        </div>
+        
+        </div>
+
+    </form>
+</body>
+</html>
+
+
+
+<?php
+include '../module/dbconnect.php';
+
+$dir="..";
+$parentlist=scandir($dir);
+$donotscan=array(
+basename($_SERVER['PHP_SELF'],".php"),
+".",
+"..",
+".htaccess",
+".panel",
+"autoloader.php",
+"env.bat",
+);
+
+$ressel=mysqli_query($con,"select * from tbl_urlmapping");
+while($row=mysqli_fetch_assoc($ressel)){
+    $donotscan[]=$row['filename'];
+}
+
+//print_r($donotscan);
+
+foreach($parentlist as $key => $listrow):
+            if(in_array($listrow,$donotscan)):
+                continue;
+            else:
+            $ROOTPATH=dirname(__DIR__);
+            $rootname=basename($ROOTPATH);
+            if(is_dir("$ROOTPATH/$listrow")){$type="folder";}else{$type="file";}
+            if($type=="folder"){$status='done';}else{$status='undone';}
+            $sql="insert into tbl_urlmapping(filename,filetype,status,rootname) values('$listrow','$type','$status','$rootname')";
+            if(mysqli_query($con,$sql)){}else{echo mysqli_error($con);}
+            endif;
+endforeach;
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>:: Directory | All List ::</title>
+    <style>
+        table,th,td{
+            border:1px solid black;
+            border-collapse:collapse;
+            text-align:center;
+        }
+        td{
+            font-size:20px;
+        }
+         th{
+            background:black;
+            color:white;
+            font-family:rockwell;
+            font-size:17px;
+        }
+        tr:nth-child(odd){
+            background:yellow;
+        }
+    </style>
+</head>
+<body>
+    <table width="100%">
+    <thead>
+        <tr>
+            <th>Sr No</th>
+            <th>Source Name</th>
+            <th>Type</th>
+            <th>Action</th>
+            <th>root directory</td>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php 
+    $i=1;
+            $ROOTPATH=dirname(__DIR__);
+            $rootname=basename($ROOTPATH);
+    $query="select * from tbl_urlmapping where rootname='$rootname'";
+    $res=mysqli_query($con,$query);
+    while($row=mysqli_fetch_assoc($res)):?>
+    <tr style="background-color:<?php if($row['filetype']=='folder'){echo '#ff000052;cursor:not-allowed;';}else{echo 'white;';} ?>">
+    <td><?php echo $i;?></td>
+    <td><?php echo $row['filename']; ?></td>
+    <td><?php echo $row['filetype']; ?></td>
+    <td>
+           <?php  if($row['filetype']=="folder"): ?>
+            <?php   echo "not allowed";  ?>
+            <?php else: ?>
+            <a href="changeurl.php?do=<?php echo basename($listrow,'.php');?>">rewrite-Url</a></td>
+            <?php endif; ?>       
+    </td>
+    <td><?php echo $row['rootname'];?></td>
+     <td style="background:cyan;"><?php echo $row['status']; ?></td>
+    </tr>
+    <?php $i++; ?>     
+    <?php endwhile;?>
+    </tbody>
+    </table>
+</body>
+</html>
+
