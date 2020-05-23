@@ -1,0 +1,9 @@
+#function name :multidelete use to delete the multiple record from the table at single click
+
+
+#How to use:
+# call the multidelete function to delete the record it has two arguments
+# 1. $table name : table name in which you want records to be deleted 
+# 2. $idarray: id stored in a array
+
+multidelete($tablename,array $idarray);

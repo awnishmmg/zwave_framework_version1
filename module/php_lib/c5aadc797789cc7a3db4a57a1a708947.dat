@@ -1,0 +1,20 @@
+#function name :create_demotable is responsible for the creating the database table in easy manner
+
+
+#Note given below is the code for how to create database table in less than a 1 minute just copy paste the code
+# note that functionname will be your database table name 
+# note that table() has few arguments to be passed and these are fixed 
+#1. $tableobj is fixed
+#2. __FUNCTION__ will remain constant is option
+#3. in first argument you can give any fieldname
+#4. for 2nd argument you can give char for character and 
+#5. 3rd argument has to be used for size 
+
+
+function your_tablename(Table $tableobj){
+
+	table($tableobj,__FUNCTION__.'name','char','40');
+	table($tableobj,__FUNCTION__.'gender','char','20');
+	table($tableobj,__FUNCTION__.'mobile','char','15');
+
+}

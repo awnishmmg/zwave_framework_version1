@@ -1,0 +1,111 @@
+#function name form_helper This perticular class form with complete backend
+#just copy paste the code 
+
+
+#using phalcon framework coding standards
+
+# How to create form tag
+
+$formobj= new Form([
+	'action'=>'testcode.php',
+	'method' => 'get',
+]);
+
+#render the form tags
+
+$formobj->tag('input',
+[
+	'type'=>'text',
+	'label'=>'Enter your Name:',
+	'name'=>'std_name',
+
+]);
+
+$formobj->tag('input',
+[
+	'type'=>'email',
+	'label'=>'Enter your Email:',
+	'name'=>'email',
+
+]);
+
+
+$formobj->tag('input',
+[
+	'type'=>'password',
+	'label'=>'Enter your password:',
+	'name'=>'password',
+
+]);
+
+#how to render textarea
+
+$formobj->tag('textarea',
+[
+	'name'=>'message',
+	'label'=>'Enter your Message:',
+	'style'=>'resize:none;',
+	'innercode' => 'write some message',
+]);
+
+
+#how to make select box
+
+
+$formobj->tag('select',[
+	'name'=>'city',
+	'label'=>'select your course:',
+	'innercode'=>$formobj->tag('option',[
+		''=>'--select--',
+		'1'=>'Btech',
+		'2'=>'MSC',
+		'3'=>'BSC',
+		'4'=>'None',
+	]),
+	
+]);
+
+#how to make checkbox
+
+$formobj->checkbox([
+
+	'label'=>'select your hobbies:',
+	'name'=>'hobbies[]',
+	'suffix'=>[
+		'singing'=>'Singing Song',
+		'dancing'=>'Dancing', 
+		'biking' => 'Riding a Bike',
+		'youtubing' => 'Making youtube videos',
+		],
+]);
+
+#how to make radio button
+
+$formobj->radio([
+		
+		'label' => 'Select Your Gender:',
+		'name' =>'gender',
+		'suffix'=> [
+				'male'=>'Male',
+				'female'=>'Female',
+				'others'=>'others',
+		],
+
+
+
+]);
+
+#how to create submit button
+
+
+$formobj->tag('input',
+[
+	'type'=>'submit',
+	'name'=>'submit',
+	'value'=>'update',
+]);
+
+#finally render the form
+
+$formobj->render_form();
+

@@ -1,0 +1,16 @@
+{
+    "name": "awisoft.net/zwave-framework",
+    "description": "zwave-framework/beta-awisoft.net",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "awnish kumar",
+            "email": "awnishmmg.a41@gmail.com"
+        }
+    ],
+	"autoload": {
+		"files": ["mylibrary/functions.php"]
+	},
+    "require": {}
+}

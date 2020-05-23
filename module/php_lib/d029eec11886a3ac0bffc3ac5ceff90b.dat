@@ -1,0 +1,9 @@
+
+#function name : insertat used to insert the data at a specified columns only
+
+#function consist of three arguments 
+#1. $tablename which means you have to set the tablename
+#2. collection of array elements you want to insert in format such that key is column-name and 
+#value of the array is columns data 
+
+insertat($tablename,array $coldata);

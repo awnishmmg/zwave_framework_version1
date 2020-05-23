@@ -1,0 +1,23 @@
+#function name : securelogin responsible for handling the request of login and session automatically even without passing the fields-name 
+
+#securelogin function has two arguments
+#1. table name : from where login credentails is to be matched
+#2. SECURE as a default constant to enable the session
+
+
+
+if(isset($_POST['reg_submit'])){
+    
+        unset($_POST['reg_submit']);
+        
+    require 'autoloader.php';
+
+    $auth=successlogin('tbl_admin',SECURE);
+    if($auth['status']==true):
+    authmanager($auth['mode'],$auth['authtoken']);
+    gotopage("admin-dashboard.php?status=login-sucess");
+    else:
+    gotopage("index.php?msg=invalid-user");
+    endif;
+
+}

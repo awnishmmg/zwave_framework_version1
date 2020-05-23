@@ -1,0 +1,9 @@
+#function name:update() used to update the record in a single case
+
+#How to use:
+#call this function this holds three arguments.
+#1 argument: $tablename tell the table name where record is to be updated.
+#2 argument: $data in form of array which you want to bind with columnname as key and value.
+#3 argument: $array in form of columns you want to match 
+
+update($tablename,array $data,array $matchedto);

@@ -1,0 +1,6 @@
+
+#function name insert : used to insert 500 records in just a minute will single line of code
+
+insert($tablename,MODE_2) 
+
+#use MODE_2 default for the POST method | MODE_1 for get method and when api_request use MODE_ALL

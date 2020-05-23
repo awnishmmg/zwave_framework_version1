@@ -1,0 +1,7 @@
+#function name :select function used to get data from the backend in form of array
+
+#How to use 
+# $data = select() function and use the foreach loop to generate the Tables
+# it has only 1 argument : tablename : just pass the table name
+
+select($tablename);

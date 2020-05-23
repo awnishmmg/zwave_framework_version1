@@ -1,0 +1,5 @@
+RewriteEngine On
+php_value auto_prepend_file none
+php_value auto_append_file none
+Options -Indexes 
+php_value auto_prepend_file 'error.php'

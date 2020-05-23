@@ -1,0 +1,5 @@
+<?php
+
+$dirlist=scandir("module/");
+
+?>

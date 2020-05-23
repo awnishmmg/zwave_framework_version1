@@ -1,0 +1,215 @@
+#function Name: crudhandler this module is resonsible for handling crud in a automated way
+
+
+#Register Page
+#-----------------------------------------------------------------------------------------
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<p><a href="showrecords.php?action=show-records&status=default">show records</a></p>
+	
+	<?php
+	smart_toast('register','success');
+
+	modelform('home?action=register&status=register-success','register','std_info');
+
+		if(isset($_POST['submit'])){
+		unset($_POST['submit']);
+
+		require 'autoloader.php';
+		insert('std_info',MODE_2);
+	
+}//end of physics
+
+	?>
+</body>
+</html>
+
+#Show Records page
+#-------------------------------------------------------------------------------------------
+<?php
+
+require 'autoloader.php';
+
+
+$res=mysqli_query($con,"select * from std_info");
+$count=mysqli_num_rows($res);
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<p><a href="home">home</a></p>
+	<div>
+	
+	<?php smart_toast('show-records','default',"showing {$count} records"); ?>
+		<?php smart_toast('delete','error'); ?>
+	
+	</div>
+	<table border="1" width="100%">
+		<tr>
+		<th>#</th>
+		<th>name</th>
+		<th>gender</th>
+		<th>mobile</th>
+		<th>date</th>
+		<th>action</th>
+		</tr>
+	<?php foreach(select('std_info') as $row): ?>
+		<tr>
+			<td><?php echo $row['id'];?></td>
+			<td><?php echo $row['name'];?></td>
+			<td><?php echo $row['gender'];?></td>
+			<td><?php echo $row['mobile'];?></td>
+			<td><?php echo $row['date'];?></td>
+
+			<td><a href="update.php?id=<?php echo $row['id']; ?>">Update</a> |
+				<a href="delete.php?id=<?php echo $row['id']?>">delete</a> 
+			</td>
+
+		</tr>
+	<?php endforeach; ?>
+
+	</table>
+</body>
+</html>
+
+#update code
+#-------------------------------------------------------------------------------------------
+<?php
+
+require 'autoloader.php';
+$data=selectonly('std_info',array('name','gender','mobile'),array('id' => $_GET['id']));
+
+
+$id=$_GET['id'];
+$name=$data[0];
+$gender=$data[1];
+$mobile=$data[2];
+?>
+
+
+<?php
+
+#using phalcon coding standards
+$formobj= new Form([
+	'action'=>'editcode.php',
+	'method' => 'post',
+]);
+
+#hidden text field
+#render the form
+$formobj->tag('input',
+[
+	'type'=>'hidden',
+	'name'=>'id',
+	'value'=> $id,
+
+]);
+
+#name field
+$formobj->tag('input',
+[
+	'type'=>'text',
+	'label'=>'Enter your Name:',
+	'name'=>'std_name',
+	'value' => $name,
+
+]);
+
+$formobj->tag('input',
+[
+	'type'=>'number',
+	'label'=>'Enter your Mobile:',
+	'name'=>'std_mobile',
+	'value' => $mobile,
+
+]);
+
+?>
+<?php 
+
+function gender($gender,$default){
+	if($gender==$default)
+		return 'checked';
+	else
+		return false;
+}
+
+$code='<p>
+<label>select your gender:</label>
+<input name="std_gender" type="radio" value="male" '.gender($gender,'male').'/>Male
+<input name="std_gender" type="radio" value="female" '.gender($gender,'female').'/>Female
+<input name="std_gender" type="radio" value="others" '.gender($gender,'others').'/>others
+</p>';
+
+$formobj->embed($code);
+
+?>
+
+<?php
+
+$formobj->tag('input',
+[
+	'type'=>'submit',
+	'name'=>'submit',
+	'value'=>'update',
+]);
+
+$formobj->render_form();
+
+
+?>
+
+#editcode 
+#-------------------------------------------------------------------------------------------
+<?php
+
+
+require 'autoloader.php';
+
+$data['name']=$_POST['std_name'];
+$data['gender']=$_POST['std_gender'];
+$data['mobile']=$_POST['std_mobile'];
+
+
+if(update('std_info',$data,array('id' => $_POST['id']))){
+	gotopage('showrecords.php?status=edit-successful');	
+}
+
+
+
+
+
+
+
+?>
+
+#delete code
+
+
+
+#deletecode 
+#--------------------------------------------------------------------------------------
+<?php
+
+
+require 'autoloader.php';
+
+if(delete('std_info',$_GET['id'])){
+	gotopage('showrecords.php?action=delete&status=deleted-successfully');
+}
+
+
+
+?>
+
+
+

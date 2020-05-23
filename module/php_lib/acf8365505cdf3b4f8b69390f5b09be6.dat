@@ -1,0 +1,11 @@
+#function name: selectonly() this function is used to get selected information based on #condition
+
+
+
+#How to use:
+# it has only 3 argument.
+# 1 argument: table name from where data is to be selected.
+# 2 argument: columns name where data is required.
+# 3 argument: matching array with columns and values respectively.
+
+selectonly($tablename,array $colsarray,array $matchedto);

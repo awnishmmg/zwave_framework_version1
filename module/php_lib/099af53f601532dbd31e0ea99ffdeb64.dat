@@ -1,0 +1,8 @@
+#function name :delete can be used to delete the record code in a single line
+
+#How to use : call the delete function it accepts two argument 
+# 1 argument: $tablename : from which table you want to delete the record
+# 2 argument: $id : Pass the Primary-key to delete the record.
+
+
+delete($tablename,$id);
